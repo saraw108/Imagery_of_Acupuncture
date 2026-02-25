@@ -12,38 +12,35 @@
 import numpy as np
 from numpy import genfromtxt
 import pandas as pd
-from sklearn.manifold import TSNE
 from matplotlib import pyplot as plt
-from rsatoolbox.rdm.calc import calc_rdm
-from rsatoolbox.data.dataset import Dataset, merge_datasets
-from scipy.spatial import distance
 from scipy.stats import ttest_rel
 import os
 import statsmodels.api as sm
 from statsmodels.formula.api import ols
 
 
-# In[2]:
+# In[5]:
 
 
 # "D:\IMACU\behav\IMACU_behav_final.xlsx"
-df = pd.read_excel('.../IMACU/behav/IMACU_behav.xlsx')
+
+df_raw_Acu = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/ExpectationStimulation_session1_Acu.csv')#get the values for a given file
+df_raw_C1 = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/ExpectationStimulation_session1_C1.csv')#get the values for a given file
+df_raw_C2 = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/ExpectationStimulation_session1_C2.csv')#get the values for a given file
 
 
-# In[3]:
+# In[7]:
 
 
 # Sess 1, before, Stim
 
-FORMAT_Acu = ['1_EA_1_1', '1_EA_1_2', '1_EA_1_3', '1_EA_1_4', '1_EA_1_5', '1_EA_1_6', '1_EA_1_7', '1_EA_1_8', '1_EA_1_9', '1_EA_1_10', '1_EA_1_11', '1_EA_1_12']
-df_Acu = df[FORMAT_Acu]
-FORMAT_C1 = ['1_EA_2_1', '1_EA_2_2', '1_EA_2_3', '1_EA_2_4', '1_EA_2_5', '1_EA_2_6', '1_EA_2_7', '1_EA_2_8', '1_EA_2_9', '1_EA_2_10', '1_EA_2_11', '1_EA_2_12']
-df_C1 = df[FORMAT_C1]
-FORMAT_C2 = ['1_EA_3_1', '1_EA_3_2', '1_EA_3_3', '1_EA_3_4', '1_EA_3_5', '1_EA_3_6', '1_EA_3_7', '1_EA_3_8', '1_EA_3_9', '1_EA_3_10', '1_EA_3_11', '1_EA_3_12']
-df_C2 = df[FORMAT_C2]
+FORMAT = ['soreness', 'aching', 'deep_pressure', 'heaviness', 'fullness', 'tingling', 'numbness', 'sharp_pain', 'dull_pain', 'warmness', 'cold', 'throbbing']
+df_Acu = df_raw_Acu[FORMAT]
+df_C1 = df_raw_C1[FORMAT]
+df_C2 = df_raw_C2[FORMAT]
 
 
-# In[4]:
+# In[8]:
 
 
 df_Acu_clean = np.delete(df_Acu.values, [10], 0)
@@ -62,72 +59,6 @@ plt.bar(np.arange(12)*2+0.6, np.mean(stim_C2,0), label = 'ExStimC2', color =
 '#ff7f7f')
 plt.legend()
 
-plt.ylim(0, 6)
-
-
-# In[5]:
-
-
-flat_data = np.append(stim_acu, stim_C1)
-flat_data = np.append(flat_data, stim_C2)
-
-dataframe = pd.DataFrame({'Points': np.repeat(['Acu', 'C1', 'C2'], 25*12),
-                          'Items': np.tile(['soreness', 'aching', 'deep_pressure', 'heaviness', 'fullness', 'tingling', 'numbness', 'sharp_pain', 'dull_pain', 'warmness', 'cold', 'throbbing'], 25*3),
-                          'intensity': flat_data})
-
-model = ols('intensity ~ C(Points) + C(Items) + C(Points):C(Items)', data=dataframe).fit()
-anova_result = sm.stats.anova_lm(model, type=2)
-anova_result
-
-
-# In[6]:
-
-
-plt.boxplot((np.mean(stim_acu,1), np.mean(stim_C1,1), np.mean(stim_C2,1))) 
-ex_stim = np.mean((np.mean(stim_acu,1), np.mean(stim_C1,1), np.mean(stim_C2,1)),0)
-plt.ylim(0, 7)
-plt.title("MASS expectation stim, collapsed over items")
-
-save_three = np.round((np.mean(stim_acu,1), np.mean(stim_C1,1), np.mean(stim_C2,1)),2)
-np.savetxt('stim_pre.txt', save_three)
-save_three_mean = np.mean(np.round((np.mean(stim_acu,1), np.mean(stim_C1,1), np.mean(stim_C2,1)),2),1)
-np.savetxt('MEAN_stim_pre.txt', save_three_mean)
-weights_save = np.divide(save_three.T, save_three_mean)
-np.savetxt('WEIGHTS_stim_pre.txt', weights_save.T)
-
-
-# In[7]:
-
-
-# Sess 1, before, Imag
-
-FORMAT_Acu = ['1_EI_1_1', '1_EI_1_2', '1_EI_1_3', '1_EI_1_4', '1_EI_1_5', '1_EI_1_6', '1_EI_1_7', '1_EI_1_8', '1_EI_1_9', '1_EI_1_10', '1_EI_1_11', '1_EI_1_12']
-df_Acu = df[FORMAT_Acu]
-FORMAT_C1 = ['1_EI_2_1', '1_EI_2_2', '1_EI_2_3', '1_EI_2_4', '1_EI_2_5', '1_EI_2_6', '1_EI_2_7', '1_EI_2_8', '1_EI_2_9', '1_EI_2_10', '1_EI_2_11', '1_EI_2_12']
-df_C1 = df[FORMAT_C1]
-FORMAT_C2 = ['1_EI_3_1', '1_EI_3_2', '1_EI_3_3', '1_EI_3_4', '1_EI_3_5', '1_EI_3_6', '1_EI_3_7', '1_EI_3_8', '1_EI_3_9', '1_EI_3_10', '1_EI_3_11', '1_EI_3_12']
-df_C2 = df[FORMAT_C2]
-
-
-# In[8]:
-
-
-df_Acu_clean = np.delete(df_Acu.values, [10], 0)
-df_C1_clean = np.delete(df_C1.values, [10], 0)
-df_C2_clean = np.delete(df_C2.values, [10], 0)
-
-stim_acu = np.nan_to_num(df_Acu_clean) 
-stim_C1 = np.nan_to_num(df_C1_clean) 
-stim_C2 = np.nan_to_num(df_C2_clean) 
-
-
-plt.bar(np.arange(12)*2, np.mean(stim_acu,0), label = 'ExImagAcu', color =
-'#004471')
-plt.bar(np.arange(12)*2+0.3, np.mean(stim_C1,0), label = 'ExImagC1', color =
-'#0072bd')
-plt.bar(np.arange(12)*2+0.6, np.mean(stim_C2,0), label = 'ExImagC2', color =
-'#66aad7')
-plt.legend()
 plt.ylim(0, 6)
 
 
@@ -150,6 +81,72 @@ anova_result
 
 
 plt.boxplot((np.mean(stim_acu,1), np.mean(stim_C1,1), np.mean(stim_C2,1))) 
+ex_stim = np.mean((np.mean(stim_acu,1), np.mean(stim_C1,1), np.mean(stim_C2,1)),0)
+plt.ylim(0, 7)
+plt.title("MASS expectation stim, collapsed over items")
+
+save_three = np.round((np.mean(stim_acu,1), np.mean(stim_C1,1), np.mean(stim_C2,1)),2)
+np.savetxt('stim_pre.txt', save_three)
+save_three_mean = np.mean(np.round((np.mean(stim_acu,1), np.mean(stim_C1,1), np.mean(stim_C2,1)),2),1)
+np.savetxt('MEAN_stim_pre.txt', save_three_mean)
+weights_save = np.divide(save_three.T, save_three_mean)
+np.savetxt('WEIGHTS_stim_pre.txt', weights_save.T)
+
+
+# In[11]:
+
+
+# Sess 1, before, Imag
+df_raw_Acu = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/ExpectationImagery_session1_Acu.csv')#get the values for a given file
+df_raw_C1 = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/ExpectationImagery_session1_C1.csv')#get the values for a given file
+df_raw_C2 = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/ExpectationImagery_session1_C2.csv')#get the values for a given file
+
+df_Acu = df_raw_Acu[FORMAT]
+df_C1 = df_raw_C1[FORMAT]
+df_C2 = df_raw_C2[FORMAT]
+
+
+# In[12]:
+
+
+df_Acu_clean = np.delete(df_Acu.values, [10], 0)
+df_C1_clean = np.delete(df_C1.values, [10], 0)
+df_C2_clean = np.delete(df_C2.values, [10], 0)
+
+stim_acu = np.nan_to_num(df_Acu_clean) 
+stim_C1 = np.nan_to_num(df_C1_clean) 
+stim_C2 = np.nan_to_num(df_C2_clean) 
+
+
+plt.bar(np.arange(12)*2, np.mean(stim_acu,0), label = 'ExImagAcu', color =
+'#004471')
+plt.bar(np.arange(12)*2+0.3, np.mean(stim_C1,0), label = 'ExImagC1', color =
+'#0072bd')
+plt.bar(np.arange(12)*2+0.6, np.mean(stim_C2,0), label = 'ExImagC2', color =
+'#66aad7')
+plt.legend()
+plt.ylim(0, 6)
+
+
+# In[13]:
+
+
+flat_data = np.append(stim_acu, stim_C1)
+flat_data = np.append(flat_data, stim_C2)
+
+dataframe = pd.DataFrame({'Points': np.repeat(['Acu', 'C1', 'C2'], 25*12),
+                          'Items': np.tile(['soreness', 'aching', 'deep_pressure', 'heaviness', 'fullness', 'tingling', 'numbness', 'sharp_pain', 'dull_pain', 'warmness', 'cold', 'throbbing'], 25*3),
+                          'intensity': flat_data})
+
+model = ols('intensity ~ C(Points) + C(Items) + C(Points):C(Items)', data=dataframe).fit()
+anova_result = sm.stats.anova_lm(model, type=2)
+anova_result
+
+
+# In[14]:
+
+
+plt.boxplot((np.mean(stim_acu,1), np.mean(stim_C1,1), np.mean(stim_C2,1))) 
 ex_imag = np.mean((np.mean(stim_acu,1), np.mean(stim_C1,1), np.mean(stim_C2,1)),0)
 
 save_three = np.round((np.mean(stim_acu,1), np.mean(stim_C1,1), np.mean(stim_C2,1)),2)
@@ -163,20 +160,21 @@ plt.ylim(0, 7)
 plt.title("MASS expectation imag, collapsed over items")
 
 
-# In[3]:
+# In[15]:
 
 
 # Sess 1, after, Stim
 
-FORMAT_Acu = ['1_A_1_1', '1_A_1_2', '1_A_1_3', '1_A_1_4', '1_A_1_5', '1_A_1_6', '1_A_1_7', '1_A_1_8', '1_A_1_9', '1_A_1_10', '1_A_1_11', '1_A_1_12']
-df_Acu = df[FORMAT_Acu]
-FORMAT_C1 = ['1_A_2_1', '1_A_2_2', '1_A_2_3', '1_A_2_4', '1_A_2_5', '1_A_2_6', '1_A_2_7', '1_A_2_8', '1_A_2_9', '1_A_2_10', '1_A_2_11', '1_A_2_12']
-df_C1 = df[FORMAT_C1]
-FORMAT_C2 = ['1_A_3_1', '1_A_3_2', '1_A_3_3', '1_A_3_4', '1_A_3_5', '1_A_3_6', '1_A_3_7', '1_A_3_8', '1_A_3_9', '1_A_3_10', '1_A_3_11', '1_A_3_12']
-df_C2 = df[FORMAT_C2]
+df_raw_Acu = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/Stimulation_session1_Acu.csv')#get the values for a given file
+df_raw_C1 = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/Stimulation_session1_C1.csv')#get the values for a given file
+df_raw_C2 = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/Stimulation_session1_C2.csv')#get the values for a given file
+
+df_Acu = df_raw_Acu[FORMAT]
+df_C1 = df_raw_C1[FORMAT]
+df_C2 = df_raw_C2[FORMAT]
 
 
-# In[4]:
+# In[16]:
 
 
 df_Acu_clean = np.delete(df_Acu.values, [10], 0)
@@ -197,7 +195,7 @@ plt.legend()
 plt.ylim(0, 6)
 
 
-# In[5]:
+# In[17]:
 
 
 flat_data = np.append(stim_acu, stim_C1)
@@ -212,7 +210,7 @@ anova_result = sm.stats.anova_lm(model, type=2)
 anova_result
 
 
-# In[6]:
+# In[18]:
 
 
 test1= ttest_rel(np.mean(stim_acu,1), np.mean(stim_C1,1))
@@ -223,7 +221,7 @@ test3= ttest_rel(np.mean(stim_C1,1), np.mean(stim_C2,1))
 print('t(24) value of c1 vs c2: ', np.round(test3.statistic,2), 'p value of c1 vs c2: ', np.round(test3.pvalue,2))
 
 
-# In[15]:
+# In[19]:
 
 
 plt.boxplot((np.mean(stim_acu,1), np.mean(stim_C1,1), np.mean(stim_C2,1))) 
@@ -240,20 +238,21 @@ plt.ylim(0, 7)
 plt.title("MASS Stim, collapsed over items")
 
 
-# In[19]:
+# In[20]:
 
 
 # Sess 1, after, Imag
 
-FORMAT_Acu = ['1_I_1_1', '1_I_1_2', '1_I_1_3', '1_I_1_4', '1_I_1_5', '1_I_1_6', '1_I_1_7', '1_I_1_8', '1_I_1_9', '1_I_1_10', '1_I_1_11', '1_I_1_12']
-df_Acu = df[FORMAT_Acu]
-FORMAT_C1 = ['1_I_2_1', '1_I_2_2', '1_I_2_3', '1_I_2_4', '1_I_2_5', '1_I_2_6', '1_I_2_7', '1_I_2_8', '1_I_2_9', '1_I_2_10', '1_I_2_11', '1_I_2_12']
-df_C1 = df[FORMAT_C1]
-FORMAT_C2 = ['1_I_3_1', '1_I_3_2', '1_I_3_3', '1_I_3_4', '1_I_3_5', '1_I_3_6', '1_I_3_7', '1_I_3_8', '1_I_3_9', '1_I_3_10', '1_I_3_11', '1_I_3_12']
-df_C2 = df[FORMAT_C2]
+df_raw_Acu = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/Imagery_session1_Acu.csv')#get the values for a given file
+df_raw_C1 = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/Imagery_session1_C1.csv')#get the values for a given file
+df_raw_C2 = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/Imagery_session1_C2.csv')#get the values for a given file
+
+df_Acu = df_raw_Acu[FORMAT]
+df_C1 = df_raw_C1[FORMAT]
+df_C2 = df_raw_C2[FORMAT]
 
 
-# In[20]:
+# In[21]:
 
 
 df_Acu_clean = np.delete(df_Acu.values, [10], 0)
@@ -274,7 +273,7 @@ plt.legend()
 plt.ylim(0, 6)
 
 
-# In[21]:
+# In[22]:
 
 
 flat_data = np.append(stim_acu, stim_C1)
@@ -289,7 +288,7 @@ anova_result = sm.stats.anova_lm(model, type=2)
 anova_result
 
 
-# In[22]:
+# In[23]:
 
 
 plt.boxplot((np.mean(stim_acu,1), np.mean(stim_C1,1), np.mean(stim_C2,1))) 
@@ -306,20 +305,21 @@ plt.ylim(0, 7)
 plt.title("MASS Imag, collapsed over items")
 
 
-# In[25]:
+# In[24]:
 
 
 # Sess 2, before, Imag
 
-FORMAT_Acu = ['2_EI_1_1', '2_EI_1_2', '2_EI_1_3', '2_EI_1_4', '2_EI_1_5', '2_EI_1_6', '2_EI_1_7', '2_EI_1_8', '2_EI_1_9', '2_EI_1_10', '2_EI_1_11', '2_EI_1_12']
-df_Acu = df[FORMAT_Acu]
-FORMAT_C1 = ['2_EI_2_1', '2_EI_2_2', '2_EI_2_3', '2_EI_2_4', '2_EI_2_5', '2_EI_2_6', '2_EI_2_7', '2_EI_2_8', '2_EI_2_9', '2_EI_2_10', '2_EI_2_11', '2_EI_2_12']
-df_C1 = df[FORMAT_C1]
-FORMAT_C2 = ['2_EI_3_1', '2_EI_3_2', '2_EI_3_3', '2_EI_3_4', '2_EI_3_5', '2_EI_3_6', '2_EI_3_7', '2_EI_3_8', '2_EI_3_9', '2_EI_3_10', '2_EI_3_11', '2_EI_3_12']
-df_C2 = df[FORMAT_C2]
+df_raw_Acu = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/ExpectationImagery_session2_Acu.csv')#get the values for a given file
+df_raw_C1 = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/ExpectationImagery_session2_C1.csv')#get the values for a given file
+df_raw_C2 = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/ExpectationImagery_session2_C2.csv')#get the values for a given file
+
+df_Acu = df_raw_Acu[FORMAT]
+df_C1 = df_raw_C1[FORMAT]
+df_C2 = df_raw_C2[FORMAT]
 
 
-# In[26]:
+# In[25]:
 
 
 df_Acu_clean = np.delete(df_Acu.values, [10], 0)
@@ -343,7 +343,7 @@ plt.legend()
 plt.ylim(0, 6)
 
 
-# In[27]:
+# In[26]:
 
 
 flat_data = np.append(stim_acu, stim_C1)
@@ -360,7 +360,7 @@ anova_result = sm.stats.anova_lm(model, type=2)
 anova_result
 
 
-# In[28]:
+# In[27]:
 
 
 plt.boxplot((np.mean(stim_acu,1), np.mean(stim_C1,1), np.mean(stim_C2,1))) 
@@ -377,20 +377,21 @@ plt.ylim(0, 7)
 plt.title("MASS Expectation Imag Sess 2, collapsed over items")
 
 
-# In[29]:
+# In[28]:
 
 
 # Sess 2, before, Imag
 
-FORMAT_Acu = ['2_I_1_1', '2_I_1_2', '2_I_1_3', '2_I_1_4', '2_I_1_5', '2_I_1_6', '2_I_1_7', '2_I_1_8', '2_I_1_9', '2_I_1_10', '2_I_1_11', '2_I_1_12']
-df_Acu = df[FORMAT_Acu]
-FORMAT_C1 = ['2_I_2_1', '2_I_2_2', '2_I_2_3', '2_I_2_4', '2_I_2_5', '2_I_2_6', '2_I_2_7', '2_I_2_8', '2_I_2_9', '2_I_2_10', '2_I_2_11', '2_I_2_12']
-df_C1 = df[FORMAT_C1]
-FORMAT_C2 = ['2_I_3_1', '2_I_3_2', '2_I_3_3', '2_I_3_4', '2_I_3_5', '2_I_3_6', '2_I_3_7', '2_I_3_8', '2_I_3_9', '2_I_3_10', '2_I_3_11', '2_I_3_12']
-df_C2 = df[FORMAT_C2]
+df_raw_Acu = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/Imagery_session2_Acu.csv')#get the values for a given file
+df_raw_C1 = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/Imagery_session2_C1.csv')#get the values for a given file
+df_raw_C2 = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/Imagery_session2_C2.csv')#get the values for a given file
+
+df_Acu = df_raw_Acu[FORMAT]
+df_C1 = df_raw_C1[FORMAT]
+df_C2 = df_raw_C2[FORMAT]
 
 
-# In[30]:
+# In[29]:
 
 
 df_Acu_clean = np.delete(df_Acu.values, [10], 0)
@@ -415,7 +416,7 @@ plt.legend()
 plt.ylim(0, 6)
 
 
-# In[31]:
+# In[30]:
 
 
 flat_data = np.append(stim_acu, stim_C1)
@@ -432,7 +433,7 @@ anova_result = sm.stats.anova_lm(model, type=2)
 anova_result
 
 
-# In[32]:
+# In[31]:
 
 
 plt.boxplot((np.mean(stim_acu,1), np.mean(stim_C1,1), np.mean(stim_C2,1))) 
@@ -449,7 +450,7 @@ plt.ylim(0, 7)
 plt.title("MASS Imag Sess 2, collapsed over items")
 
 
-# In[35]:
+# In[32]:
 
 
 plt.boxplot((ex_stim, ex_imag, stim, imag, ex_imag2, imag2)) 
@@ -470,7 +471,7 @@ np.savetxt('WEIGHTS_exstim_eximag_stim_imag_eximag2_imag2.txt', weights_save.T)
 
 
 answers = np.zeros([24,7,6,5])
-path = '.../IMACU/Logs/logs_sorted/'
+path = 'D:/IMACU/Logs/logs_sorted/'
 
 counter = 0
 for s in np.arange(26):
@@ -485,7 +486,7 @@ for s in np.arange(26):
                 if os.path.isfile(os.path.join(path,i)) and 'newLogFile_subject_' + str(s+1) + '_sess_1_run_' + str(r+1) in i:
                     files.append(i)        
 
-            log_file = pd.read_csv ('.../IMACU/Logs/logs_sorted/' + files[0], sep = '\t')
+            log_file = pd.read_csv ('D:/IMACU/Logs/logs_sorted/' + files[0], sep = '\t')
 
             answers[counter,r,0,:] = log_file[log_file['TrialNr'].values == 1]['Response'].values
             answers[counter,r,1,:] = log_file[log_file['TrialNr'].values == 2]['Response'].values
