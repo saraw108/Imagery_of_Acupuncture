@@ -39,4 +39,24 @@ all MATLAB code used to analyse the fMRI data. Can be devided into conversion (A
     - B4_normalization.m: "warping" functional data based on anatomical image to MNI space
     - B5_smoothing.m: smoothing functional data with gaussian kernel of specified FWHM
     - B6_compcorr.m: component correction extracting a specified number of principal components from white matter and cerebrospinal fluid (masks in mni space or per participant in subject-space required). Saves principal components as .txt to directory containing the nifits
-  - <b> C_univariate: </b>
+  - <b> C_univariate: </b> code used to analyse the data regarding activation. Computes 1st level GLMs and contrast images to be forwarded to the group statistics. Requirements: SPM, hMRI
+    - C0_task_based_batch_BIDS.m: batch that coordinates the GLM, specify settings here
+    - C2_1st_level_glm.m: GLM per participant
+    - C3_contrast_1stLevel.m: contrasts
+  - <b> D_multivariate: </b> code to perform the multivariate analysis ("decoding") of the three conditions
+    - D0_decoding_batch_BIDS.m: Coordinates steps of decoding. Specify settings here
+    - D2_1st_level_glm.m: Computes first level per participant and session on non-normalized data
+    - D2b_1st_level_glm.m: Computes first level per participant over all sessions on non-normalized data
+    - D3_Decoding_batch_xSess.m: Performs cross-session decoding on same conditions
+    - D3class_Decoding_batch.m: Performs decoding within session on 3 specified conditions
+    - D4_Decoding_batch_xClass.m: Performs decoding with trainaing one 3 conditions and testing on other 3 conditions within one session
+    - D4b_Decoding_batch_xClass.m: Performs decoding with trainaing one 3 conditions and testing on other 3 conditions over sessions
+    - D5_confusion_to3D.m: gathers results of previous decodings (confusion matrix) and writes them to separate nifits to be analysed in the group statistics
+    - D6a_coregister_est.m: coregisters anatomy onto space of accuracy / confusion maps
+    - D6b_segmentation.m: segments anatomy
+    - D6c_normalization.m: normalizes accuracy / confusion maps to MNI space
+    - D7_smoothing.m: smoothes accuracy maps with specifies kernel
+  - <b> E_group_inference: </b> group inference on both univariate and multivariate results
+    - E0_2ndLevel_batch_BIDS.m: Specifies settings for group statistics
+    - E1_2ndLevel_FlexFact.m: Flexible factorial design on univariate results
+    - E2_2ndLevel_FlexFAct_confusion.m: Flexible factorial design on confusion maps
