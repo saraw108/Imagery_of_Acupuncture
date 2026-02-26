@@ -21,14 +21,23 @@ import os
 
 
 # MASS
-df = pd.read_excel('.../IMACU/behav/IMACU_behav.xlsx')
+# "D:\IMACU\behav\IMACU_behav_final.xlsx"
+FORMAT = ['soreness', 'aching', 'deep_pressure', 'heaviness', 'fullness', 'tingling', 'numbness', 'sharp_pain', 'dull_pain', 'warmness', 'cold', 'throbbing']
+
+df_raw_StimAcu = pd.read_csv('.../IMACU/MASS/Stimulation_session1_Acu.csv')#get the values for a given file
+df_raw_StimC1 = pd.read_csv('.../IMACU/MASS/Stimulation_session1_C1.csv')#get the values for a given file
+df_raw_StimC2 = pd.read_csv('.../IMACU/MASS/Stimulation_session1_C2.csv')#get the values for a given file
+df_raw_ImagAcu = pd.read_csv('.../IMACU/MASS/Imagery_session1_Acu.csv')#get the values for a given file
+df_raw_ImagC1 = pd.read_csv('.../IMACU/MASS/Imagery_session1_C1.csv')#get the values for a given file
+df_raw_ImagC2 = pd.read_csv('.../IMACU/MASS/Imagery_session1_C2.csv')#get the values for a given file
+df_raw_Imag2Acu = pd.read_csv('.../IMACU/MASS/Imagery_session2_Acu.csv')#get the values for a given file
+df_raw_Imag2C1 = pd.read_csv('.../IMACU/MASS/Imagery_session2_C1.csv')#get the values for a given file
+df_raw_Imag2C2 = pd.read_csv('.../IMACU/MASS/Imagery_session2_C2.csv')#get the values for a given file
+
 # get the stims
-FORMAT_StimAcu = ['1_A_1_1', '1_A_1_2', '1_A_1_3', '1_A_1_4', '1_A_1_5', '1_A_1_6', '1_A_1_7', '1_A_1_8', '1_A_1_9', '1_A_1_10', '1_A_1_11', '1_A_1_12']
-df_StimAcu = df[FORMAT_StimAcu]
-FORMAT_StimC1 = ['1_A_2_1', '1_A_2_2', '1_A_2_3', '1_A_2_4', '1_A_2_5', '1_A_2_6', '1_A_2_7', '1_A_2_8', '1_A_2_9', '1_A_2_10', '1_A_2_11', '1_A_2_12']
-df_StimC1 = df[FORMAT_StimC1]
-FORMAT_StimC2 = ['1_A_3_1', '1_A_3_2', '1_A_3_3', '1_A_3_4', '1_A_3_5', '1_A_3_6', '1_A_3_7', '1_A_3_8', '1_A_3_9', '1_A_3_10', '1_A_3_11', '1_A_3_12']
-df_StimC2 = df[FORMAT_StimC2]
+df_StimAcu = df_raw_StimAcu[FORMAT]
+df_StimC1 = df_raw_StimC1[FORMAT]
+df_StimC2 = df_raw_StimC2[FORMAT]
 
 df_StimAcu_clean = np.delete(df_StimAcu.values, [10], 0)
 df_StimC1_clean = np.delete(df_StimC1.values, [10], 0)
@@ -38,12 +47,9 @@ stim_acu = np.nan_to_num(df_StimAcu_clean) # sj 6 has some NaNs
 stim_C1 = np.nan_to_num(df_StimC1_clean) 
 stim_C2 = np.nan_to_num(df_StimC2_clean) 
 
-FORMAT_ImagAcu = ['1_I_1_1', '1_I_1_2', '1_I_1_3', '1_I_1_4', '1_I_1_5', '1_I_1_6', '1_I_1_7', '1_I_1_8', '1_I_1_9', '1_I_1_10', '1_I_1_11', '1_I_1_12']
-df_ImagAcu = df[FORMAT_ImagAcu]
-FORMAT_ImagC1 = ['1_I_2_1', '1_I_2_2', '1_I_2_3', '1_I_2_4', '1_I_2_5', '1_I_2_6', '1_I_2_7', '1_I_2_8', '1_I_2_9', '1_I_2_10', '1_I_2_11', '1_I_2_12']
-df_ImagC1 = df[FORMAT_ImagC1]
-FORMAT_ImagC2 = ['1_I_3_1', '1_I_3_2', '1_I_3_3', '1_I_3_4', '1_I_3_5', '1_I_3_6', '1_I_3_7', '1_I_3_8', '1_I_3_9', '1_I_3_10', '1_I_3_11', '1_I_3_12']
-df_ImagC2 = df[FORMAT_ImagC2]
+df_ImagAcu = df_raw_ImagAcu[FORMAT]
+df_ImagC1 = df_raw_ImagC1[FORMAT]
+df_ImagC2 = df_raw_ImagC2[FORMAT]
 
 df_ImagAcu_clean = np.delete(df_ImagAcu.values, [10], 0)
 df_ImagC1_clean = np.delete(df_ImagC1.values, [10], 0)
@@ -53,12 +59,9 @@ imag_acu = np.nan_to_num(df_ImagAcu_clean) # sj 6 has some NaNs
 imag_C1 = np.nan_to_num(df_ImagC1_clean) 
 imag_C2 = np.nan_to_num(df_ImagC2_clean) 
 
-FORMAT_Imag2Acu = ['2_I_1_1', '2_I_1_2', '2_I_1_3', '2_I_1_4', '2_I_1_5', '2_I_1_6', '2_I_1_7', '2_I_1_8', '2_I_1_9', '2_I_1_10', '2_I_1_11', '2_I_1_12']
-df_Imag2Acu = df[FORMAT_Imag2Acu]
-FORMAT_Imag2C1 = ['2_I_2_1', '2_I_2_2', '2_I_2_3', '2_I_2_4', '2_I_2_5', '2_I_2_6', '2_I_2_7', '2_I_2_8', '2_I_2_9', '2_I_2_10', '2_I_2_11', '2_I_2_12']
-df_Imag2C1 = df[FORMAT_Imag2C1]
-FORMAT_Imag2C2 = ['2_I_3_1', '2_I_3_2', '2_I_3_3', '2_I_3_4', '2_I_3_5', '2_I_3_6', '2_I_3_7', '2_I_3_8', '2_I_3_9', '2_I_3_10', '2_I_3_11', '2_I_3_12']
-df_Imag2C2 = df[FORMAT_Imag2C2]
+df_Imag2Acu = df_raw_Imag2Acu[FORMAT]
+df_Imag2C1 = df_raw_Imag2C1[FORMAT]
+df_Imag2C2 = df_raw_Imag2C2[FORMAT]
 
 df_Imag2Acu_clean = np.delete(df_Imag2Acu.values, [10], 0)
 df_Imag2C1_clean = np.delete(df_Imag2C1.values, [10], 0)
@@ -71,12 +74,12 @@ imag2_C2 = np.nan_to_num(df_Imag2C2_clean)
 
 # next: button-presses
 
-# In[3]:
+# In[9]:
 
 
 # button-presses
 answers = np.zeros([24,7,9,5])
-path = '.../IMACU/Logs/'
+path = '.../IMACU/Logs/logs_sorted/'
 
 counter = 0
 for s in np.arange(26):
@@ -126,7 +129,7 @@ for j in np.arange(24):
 # 
 # combine button presses and MASS data
 
-# In[4]:
+# In[10]:
 
 
 np.mean(sj_counts[:,:,0],axis=0)
@@ -198,7 +201,7 @@ ax2.spines['top'].set_visible(False)
 plt.show()
 
 
-# In[5]:
+# In[11]:
 
 
 bar_width = 0.7
@@ -257,7 +260,7 @@ plt.subplots_adjust(bottom=0.15, wspace=0.1)
 plt.show()
 
 
-# In[6]:
+# In[14]:
 
 
 bar_width = 0.7
@@ -308,7 +311,7 @@ plt.subplots_adjust(bottom=0.15, wspace=0.1)
 plt.show()
 
 
-# In[7]:
+# In[15]:
 
 
 bar_width = 0.7

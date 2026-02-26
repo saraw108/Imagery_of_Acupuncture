@@ -6,7 +6,7 @@
 # 
 # ## 1. install, load and assign
 
-# In[1]:
+# In[3]:
 
 
 import numpy as np
@@ -24,12 +24,12 @@ from statsmodels.formula.api import ols
 
 # "D:\IMACU\behav\IMACU_behav_final.xlsx"
 
-df_raw_Acu = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/ExpectationStimulation_session1_Acu.csv')#get the values for a given file
-df_raw_C1 = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/ExpectationStimulation_session1_C1.csv')#get the values for a given file
-df_raw_C2 = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/ExpectationStimulation_session1_C2.csv')#get the values for a given file
+df_raw_Acu = pd.read_csv('.../IMACU/MASS/ExpectationStimulation_session1_Acu.csv')#get the values for a given file
+df_raw_C1 = pd.read_csv('.../IMACU/MASS/ExpectationStimulation_session1_C1.csv')#get the values for a given file
+df_raw_C2 = pd.read_csv('.../IMACU/MASS/ExpectationStimulation_session1_C2.csv')#get the values for a given file
 
 
-# In[7]:
+# In[5]:
 
 
 # Sess 1, before, Stim
@@ -97,9 +97,9 @@ np.savetxt('WEIGHTS_stim_pre.txt', weights_save.T)
 
 
 # Sess 1, before, Imag
-df_raw_Acu = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/ExpectationImagery_session1_Acu.csv')#get the values for a given file
-df_raw_C1 = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/ExpectationImagery_session1_C1.csv')#get the values for a given file
-df_raw_C2 = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/ExpectationImagery_session1_C2.csv')#get the values for a given file
+df_raw_Acu = pd.read_csv('.../IMACU/MASS/ExpectationImagery_session1_Acu.csv')#get the values for a given file
+df_raw_C1 = pd.read_csv('.../IMACU/MASS/ExpectationImagery_session1_C1.csv')#get the values for a given file
+df_raw_C2 = pd.read_csv('.../IMACU/MASS/ExpectationImagery_session1_C2.csv')#get the values for a given file
 
 df_Acu = df_raw_Acu[FORMAT]
 df_C1 = df_raw_C1[FORMAT]
@@ -160,21 +160,21 @@ plt.ylim(0, 7)
 plt.title("MASS expectation imag, collapsed over items")
 
 
-# In[15]:
+# In[6]:
 
 
 # Sess 1, after, Stim
 
-df_raw_Acu = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/Stimulation_session1_Acu.csv')#get the values for a given file
-df_raw_C1 = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/Stimulation_session1_C1.csv')#get the values for a given file
-df_raw_C2 = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/Stimulation_session1_C2.csv')#get the values for a given file
+df_raw_Acu = pd.read_csv('.../sara/IMACU/MASS/Stimulation_session1_Acu.csv')#get the values for a given file
+df_raw_C1 = pd.read_csv('.../sara/IMACU/MASS/Stimulation_session1_C1.csv')#get the values for a given file
+df_raw_C2 = pd.read_csv('.../sara/IMACU/MASS/Stimulation_session1_C2.csv')#get the values for a given file
 
 df_Acu = df_raw_Acu[FORMAT]
 df_C1 = df_raw_C1[FORMAT]
 df_C2 = df_raw_C2[FORMAT]
 
 
-# In[16]:
+# In[7]:
 
 
 df_Acu_clean = np.delete(df_Acu.values, [10], 0)
@@ -195,7 +195,7 @@ plt.legend()
 plt.ylim(0, 6)
 
 
-# In[17]:
+# In[8]:
 
 
 flat_data = np.append(stim_acu, stim_C1)
@@ -210,7 +210,7 @@ anova_result = sm.stats.anova_lm(model, type=2)
 anova_result
 
 
-# In[18]:
+# In[10]:
 
 
 test1= ttest_rel(np.mean(stim_acu,1), np.mean(stim_C1,1))
@@ -243,9 +243,9 @@ plt.title("MASS Stim, collapsed over items")
 
 # Sess 1, after, Imag
 
-df_raw_Acu = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/Imagery_session1_Acu.csv')#get the values for a given file
-df_raw_C1 = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/Imagery_session1_C1.csv')#get the values for a given file
-df_raw_C2 = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/Imagery_session1_C2.csv')#get the values for a given file
+df_raw_Acu = pd.read_csv('.../IMACU/MASS/Imagery_session1_Acu.csv')#get the values for a given file
+df_raw_C1 = pd.read_csv('.../IMACU/MASS/Imagery_session1_C1.csv')#get the values for a given file
+df_raw_C2 = pd.read_csv('.../IMACU/MASS/Imagery_session1_C2.csv')#get the values for a given file
 
 df_Acu = df_raw_Acu[FORMAT]
 df_C1 = df_raw_C1[FORMAT]
@@ -310,9 +310,9 @@ plt.title("MASS Imag, collapsed over items")
 
 # Sess 2, before, Imag
 
-df_raw_Acu = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/ExpectationImagery_session2_Acu.csv')#get the values for a given file
-df_raw_C1 = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/ExpectationImagery_session2_C1.csv')#get the values for a given file
-df_raw_C2 = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/ExpectationImagery_session2_C2.csv')#get the values for a given file
+df_raw_Acu = pd.read_csv('.../IMACU/MASS/ExpectationImagery_session2_Acu.csv')#get the values for a given file
+df_raw_C1 = pd.read_csv('.../IMACU/MASS/ExpectationImagery_session2_C1.csv')#get the values for a given file
+df_raw_C2 = pd.read_csv('.../IMACU/MASS/ExpectationImagery_session2_C2.csv')#get the values for a given file
 
 df_Acu = df_raw_Acu[FORMAT]
 df_C1 = df_raw_C1[FORMAT]
@@ -382,9 +382,9 @@ plt.title("MASS Expectation Imag Sess 2, collapsed over items")
 
 # Sess 2, before, Imag
 
-df_raw_Acu = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/Imagery_session2_Acu.csv')#get the values for a given file
-df_raw_C1 = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/Imagery_session2_C1.csv')#get the values for a given file
-df_raw_C2 = pd.read_csv('C:/Users/mcnbf/Desktop/sara/IMACU/MASS/Imagery_session2_C2.csv')#get the values for a given file
+df_raw_Acu = pd.read_csv('.../IMACU/MASS/Imagery_session2_Acu.csv')#get the values for a given file
+df_raw_C1 = pd.read_csv('.../IMACU/MASS/Imagery_session2_C1.csv')#get the values for a given file
+df_raw_C2 = pd.read_csv('.../IMACU/MASS/Imagery_session2_C2.csv')#get the values for a given file
 
 df_Acu = df_raw_Acu[FORMAT]
 df_C1 = df_raw_C1[FORMAT]
@@ -486,7 +486,7 @@ for s in np.arange(26):
                 if os.path.isfile(os.path.join(path,i)) and 'newLogFile_subject_' + str(s+1) + '_sess_1_run_' + str(r+1) in i:
                     files.append(i)        
 
-            log_file = pd.read_csv ('D:/IMACU/Logs/logs_sorted/' + files[0], sep = '\t')
+            log_file = pd.read_csv ('.../Logs/logs_sorted/' + files[0], sep = '\t')
 
             answers[counter,r,0,:] = log_file[log_file['TrialNr'].values == 1]['Response'].values
             answers[counter,r,1,:] = log_file[log_file['TrialNr'].values == 2]['Response'].values
